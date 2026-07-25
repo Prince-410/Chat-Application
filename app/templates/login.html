@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Login - ChatHub{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <div class="logo">💬</div>
+            <h1>ChatHub</h1>
+            <p>Connect with anyone, instantly</p>
+        </div>
+        
+        <form id="login-form">
+            <div class="input-group">
+                <input type="text" id="username" class="login-input" placeholder="Enter your username" autocomplete="off" required>
+            </div>
+            <div id="login-error" class="login-error hidden">Invalid username</div>
+            <button type="submit" class="login-btn">Join Chat</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const usernameInput = document.getElementById('username');
+    const errorDiv = document.getElementById('login-error');
+    const username = usernameInput.value.trim();
+    
+    // Validate username: 2-20 chars, alphanumeric + underscores
+    const regex = /^[a-zA-Z0-9_]{2,20}$/;
+    
+    if (!regex.test(username)) {
+        errorDiv.textContent = "Username must be 2-20 characters, alphanumeric or underscores.";
+        errorDiv.classList.remove('hidden');
+        usernameInput.focus();
+        return;
+    }
+    
+    errorDiv.classList.add('hidden');
+    // Redirect to chat with username
+    window.location.href = `/chat?username=${encodeURIComponent(username)}`;
+});
+
+document.getElementById('username').addEventListener('input', function() {
+    document.getElementById('login-error').classList.add('hidden');
+});
+</script>
+{% endblock %}

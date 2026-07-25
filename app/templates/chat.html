@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Chat - ChatHub{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <!-- Sidebar for Desktop, slidable on mobile -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>Online Users</h3>
+            <span class="user-count" id="user-count">0</span>
+        </div>
+        <div class="user-list" id="user-list">
+            <!-- User items will be populated by JS -->
+        </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="chat-main">
+        <header class="chat-header">
+            <div class="header-left">
+                <button class="hamburger" id="mobile-menu-btn">☰</button>
+                <h2>ChatHub</h2>
+            </div>
+            <div class="header-right">
+                <button id="history-btn" class="icon-btn" title="Chat History">🕰️</button>
+                <div class="current-user-display">
+                    <div class="user-avatar" id="current-user-avatar"></div>
+                    <span class="current-username">{{ username }}</span>
+                </div>
+                <a href="/" class="leave-btn">Leave</a>
+            </div>
+        </header>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="empty-state">No messages yet. Start the conversation! 💬</div>
+            <!-- Messages populated by JS -->
+        </div>
+
+        <div class="chat-input-area">
+            <div id="file-preview" class="file-preview hidden">
+                <span id="file-preview-name"></span>
+                <button id="remove-file-btn" class="icon-btn">❌</button>
+            </div>
+            <div class="input-container">
+                <button id="emoji-btn" class="input-btn">😊</button>
+                <div class="file-upload-wrapper">
+                    <button id="upload-btn" class="input-btn">📎</button>
+                    <input type="file" id="file-input" class="hidden-file-input">
+                </div>
+                <textarea id="message-input" class="message-input" placeholder="Type a message... Use @username for private messages" rows="1"></textarea>
+                <button id="send-btn" class="send-btn">➤</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Emoji Picker Modal/Panel -->
+    <div id="emoji-picker" class="emoji-picker hidden">
+        <!-- Populated by JS -->
+    </div>
+</div>
+
+<!-- Chat History Modal -->
+<div id="history-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Chat History</h3>
+            <button id="close-history" class="modal-close">❌</button>
+        </div>
+        <div class="modal-body" id="history-messages">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const CURRENT_USER = "{{ username }}";
+    // Set initial avatar
+    const avatarEl = document.getElementById('current-user-avatar');
+    avatarEl.textContent = CURRENT_USER.charAt(0).toUpperCase();
+    
+    // Hash string to color for avatar background
+    let hash = 0;
+    for (let i = 0; i < CURRENT_USER.length; i++) {
+        hash = CURRENT_USER.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const h = Math.abs(hash) % 360;
+    avatarEl.style.background = `hsl(${h}, 70%, 50%)`;
+</script>
+<script src="/static/js/chat.js"></script>
+{% endblock %}
